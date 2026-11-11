@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>MIRROR OS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{--bg:#080A0F;--card:#12151D;--card2:#1A1E29;--line:#262B38;--tx:#fff;--mu:#8D94A6;--ac:#547BFF;--lt:#F2F3F5;--ok:#3DDC97;--warn:#FFB84D;color-scheme:dark}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#080A0F}}
+:root[data-theme=dark]{--bg:#080A0F}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:#000;color:var(--tx);font-family:"Avenir Next",Inter,"Segoe UI",system-ui,sans-serif}
+#app{position:relative;width:100%;max-width:430px;height:100%;margin:0 auto;background:var(--bg);overflow:hidden;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
+@media(min-width:500px){body{display:grid;place-items:center;background:#1a1d24}#app{height:min(880px,96vh);border-radius:38px;border:1px solid var(--line);box-shadow:0 30px 80px #000a}}
+main{flex:1;overflow-y:auto;padding:20px 18px 24px;scroll-behavior:smooth}
+h1{font-size:28px;font-weight:600;letter-spacing:-.02em}h2{font-size:18px;font-weight:600;margin:22px 0 10px}h3{font-size:15px;font-weight:600}
+p,.mu{color:var(--mu);font-size:13px;line-height:1.5}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px;margin-bottom:12px;box-shadow:0 6px 20px #0006}
+.row{display:flex;align-items:center;gap:12px}.sp{justify-content:space-between}.g{display:grid;gap:10px}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}
+button{font:inherit;color:inherit;border:0;cursor:pointer;transition:transform .15s,background .2s}button:active{transform:scale(.96)}
+.btn{background:var(--ac);color:#fff;padding:14px 18px;border-radius:16px;font-weight:600;width:100%;font-size:15px}
+.btn.s{background:var(--card2);border:1px solid var(--line)}.btn.sm{width:auto;padding:9px 14px;font-size:13px;border-radius:12px}.btn.d{background:#3a1520;color:#ff8a9b}
+input,select{width:100%;background:var(--card2);border:1px solid var(--line);color:var(--tx);padding:14px;border-radius:14px;font:inherit;font-size:15px;margin-bottom:10px;outline:none}input:focus,select:focus{border-color:var(--ac)}
+.tag{font-size:11px;padding:3px 9px;border-radius:20px;background:#547BFF22;color:#9db3ff;font-weight:600}.tag.ok{background:#3DDC9722;color:var(--ok)}.tag.w{background:#FFB84D22;color:var(--warn)}
+nav{display:flex;background:#0d1017f0;border-top:1px solid var(--line);padding:8px 6px calc(10px + env(safe-area-inset-bottom,0px))}
+nav button{flex:1;background:none;color:var(--mu);font-size:11px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px}nav button.on{color:var(--ac)}nav b{font-size:20px;font-weight:400}
+.back{background:none;color:var(--ac);font-size:15px;padding:0 0 12px}
+.ic{width:40px;height:40px;border-radius:13px;background:var(--card2);display:grid;place-items:center;font-size:20px;flex:none}
+.q{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:14px;text-align:left;min-height:84px;display:flex;flex-direction:column;justify-content:space-between}.q b{font-size:22px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;margin:0 -18px;padding-left:18px;padding-right:18px}.chip{background:var(--card);border:1px solid var(--line);padding:8px 14px;border-radius:20px;font-size:13px;white-space:nowrap;color:var(--mu)}.chip.on{background:var(--ac);border-color:var(--ac);color:#fff}
+.cl{aspect-ratio:1;border-radius:20px;display:grid;place-items:center;font-size:44px;position:relative;border:1px solid var(--line);overflow:hidden}.cl img{width:100%;height:100%;object-fit:cover}.cl small{position:absolute;bottom:6px;left:8px;right:8px;font-size:11px;background:#000a;padding:3px 7px;border-radius:9px}
+.sw{position:relative;width:50px;height:30px;border-radius:20px;background:var(--line);flex:none;transition:.25s}.sw::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:.25s}.sw.on{background:var(--ac)}.sw.on::after{left:23px}
+.mirror{border-radius:26px;padding:16px;background:linear-gradient(160deg,#2a2f3a,#12151c);border:2px solid #fff3;position:relative;box-shadow:0 0 34px var(--glow,#547BFF55),inset 0 0 40px #0008}
+.mirror .t{font-size:34px;font-weight:300}
+.sheet{position:absolute;inset:0;background:#000b;display:flex;align-items:flex-end;z-index:20;animation:f .2s}.sheet>div{background:var(--bg);border-radius:28px 28px 0 0;padding:22px 18px calc(24px + env(safe-area-inset-bottom,0px));width:100%;max-height:88%;overflow:auto;animation:u .3s}
+@keyframes f{from{opacity:0}}@keyframes u{from{transform:translateY(60px)}}@keyframes pulse{0%{transform:scale(.5);opacity:.9}100%{transform:scale(2.4);opacity:0}}
+.radar{position:relative;width:120px;height:120px;margin:20px auto;display:grid;place-items:center;font-size:36px}.radar i{position:absolute;inset:0;border:2px solid var(--ac);border-radius:50%;animation:pulse 2s infinite}.radar i:nth-child(2){animation-delay:.7s}
+.bar{height:6px;border-radius:6px;background:var(--card2);overflow:hidden;margin:10px 0}.bar i{display:block;height:100%;background:var(--ac);transition:width .4s}
+#toast{position:absolute;left:50%;top:calc(14px + env(safe-area-inset-top,0px));transform:translate(-50%,-90px);background:#fff;color:#000;padding:11px 18px;border-radius:16px;font-size:13px;font-weight:600;z-index:50;transition:.35s;max-width:88%;text-align:center}#toast.show{transform:translate(-50%,0)}
+.logo{font-size:30px;font-weight:700;letter-spacing:.28em}.fade{animation:f .4s}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head><body><div id="app"><div id="toast"></div><main id="m"></main><nav id="nav"></nav></div>
+<script>
+const $=s=>document.querySelector(s);
+const MODELS={LUMI:{glow:'#FFC46688',d:'Warm light · schedule view',s:'#FFC466'},NOVA:{glow:'#BFD0FF88',d:'Outfit row · quick apps',s:'#BFD0FF'},AURA:{glow:'#FFFFFFAA',d:'Light ring · virtual try-on',s:'#fff'}};
+const CAT=['T-shirt','Shirts','Hoodies','Sweaters','Pants','Jeans','Jackets','Coats','Shoes','Accessories','Formal','Sportswear'];
+const EM={'T-shirt':'👕','Shirts':'👔','Hoodies':'🧥','Sweaters':'🧶','Pants':'👖','Jeans':'👖','Jackets':'🧥','Coats':'🧥','Shoes':'👟','Accessories':'⌚','Formal':'🤵','Sportswear':'🩳'};
+const today=()=>new Date().toLocaleDateString('en-GB');
+const S={user:null,tab:'home',stack:[],devices:[],cur:0,cat:'All',
+ wardrobe:[['White tee','T-shirt','#F2F3F5','Summer','Casual'],['Navy shirt','Shirts','#1F2F5C','All','Work'],['Grey sweater','Sweaters','#8D94A6','Winter','Casual'],['Blue jeans','Jeans','#3B5B9A','All','Casual'],['Beige trousers','Pants','#C9B79C','Spring','Work'],['Black jacket','Jackets','#1b1b1b','Autumn','Casual'],['Wool coat','Coats','#6b5440','Winter','Formal'],['White sneakers','Shoes','#f5f5f5','All','Casual'],['Silver watch','Accessories','#aab','All','All']].map((a,i)=>({id:i,name:a[0],cat:a[1],color:a[2],season:a[3],occ:a[4],date:today()})),
+ outfit:null,saved:[],worn:[],temp:12,city:'Milan',
+ events:[{id:1,t:'08:30',n:'University'},{id:2,t:'11:00',n:'Meeting'},{id:3,t:'15:30',n:'Gym'}],
+ disp:{Calendar:true,Weather:true,Spotify:false,Notifications:true,'Suggested outfit':true,Reminders:true},
+ home:[['Living room light',true],['Thermostat 21°C',true],['Smart plug',false]],cal:'Day',playing:false,track:0};
+const TR=[['Midnight City','Demo Artist'],['Blue Hour','Demo Artist'],['Glass Rooms','Demo Artist']];
+const FC=[['Today',12,'☀️',8,14],['Wed',10,'⛅',7,12],['Thu',8,'🌧️',6,9],['Fri',14,'☀️',9,16]];
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('show');clearTimeout(toast.i);toast.i=setTimeout(()=>e.classList.remove('show'),2300)}
+function sheet(h){close();const d=document.createElement('div');d.className='sheet';d.id='sh';d.innerHTML='<div>'+h+'</div>';d.onclick=e=>{if(e.target===d)close()};$('#app').appendChild(d)}
+function close(){const s=$('#sh');if(s)s.remove()}
+function sw(on,fn){return `<button class="sw ${on?'on':''}" aria-label="toggle" onclick="${fn}"></button>`}
+const badge=(real)=>real?'<span class="tag ok">Connected</span>':'<span class="tag w">Demo</span>';
+function go(s){S.stack.push(s);render()}function back(){S.stack.pop();render()}function tab(t){S.tab=t;S.stack=[];render()}
+function dev(){return S.devices[S.cur]}
+function greet(){const h=new Date().getHours();return h<12?'Good morning':h<18?'Good afternoon':'Good evening'}
+function render(){
+ const m=$('#m'),n=$('#nav');let v=S.stack.length?S.stack[S.stack.length-1]:(S.user?S.tab:'auth');
+ n.style.display=(S.user&&!['auth','pair'].includes(v)&&!S.stack.length)||(S.user&&S.stack.length&&!['pair'].includes(v))?'flex':'none';
+ if(!S.user)n.style.display='none';
+ const bk=S.stack.length?'<button class="back" onclick="back()">‹ Back</button>':'';
+ m.innerHTML='<div class="fade">'+bk+(V[v]?V[v]():'')+'</div>';m.scrollTop=0;
+ n.innerHTML=[['home','⌂','Home'],['wardrobe','👕','Wardrobe'],['assistant','✦','Assistant'],['devices','▭','Devices'],['profile','◉','Profile']].map(a=>`<button class="${S.tab===a[0]&&!S.stack.length?'on':''}" onclick="tab('${a[0]}')"><b>${a[1]}</b>${a[2]}</button>`).join('');
+}
+/* AUTH */
+let mode='in';
+function authSubmit(){const e=$('#em').value.trim(),p=$('#pw').value;if(!/^\S+@\S+\.\S+$/.test(e))return toast('Enter a valid email address');if(p.length<6)return toast('Password needs at least 6 characters');
+ const nm=$('#nm')?$('#nm').value.trim():'';S.user={name:nm||e.split('@')[0],email:e,lang:'English',demo:true};if($('#ct')&&$('#ct').value)S.city=$('#ct').value;toast('Welcome, '+S.user.name);S.tab='home';S.stack=[];render()}
+function demoStart(){S.user={name:'Alex',email:'demo@mirroros.app',lang:'English',demo:true};S.tab='home';render();toast('Demo Mode on: services are simulated')}
+const V={};
+V.auth=()=>`<div style="padding-top:30px;text-align:center"><div class="logo">MIRROR OS</div><p style="margin:8px 0 26px">Your reflection. Your personal assistant.</p></div>
+<div class="card">${mode==='up'?'<input id="nm" placeholder="Name" autocomplete="name"><input id="ct" placeholder="City (e.g. Milan)"><select><option>English</option><option>Italiano</option></select>':''}
+<input id="em" type="email" placeholder="Email" autocomplete="email"><input id="pw" type="password" placeholder="Password">
+<button class="btn" onclick="authSubmit()">${mode==='up'?'Create account':'Sign in'}</button>
+<div class="row sp" style="margin-top:12px"><button class="back" style="padding:0" onclick="mode=mode==='up'?'in':'up';render()">${mode==='up'?'I have an account':'Create account'}</button><button class="back" style="padding:0" onclick="toast('Demo: no email is sent')">Forgot password?</button></div></div>
+<div class="g g2"><button class="btn s" onclick="toast('Apple sign-in is not configured in this prototype')">Apple</button><button class="btn s" onclick="toast('Google sign-in is not configured in this prototype')">Google</button></div>
+<button class="btn s" style="margin-top:12px;border-color:var(--ac)" onclick="demoStart()">Try Demo Mode</button>
+<p style="margin-top:14px;text-align:center">Accounts here are local to this page. No backend is connected.</p>`;
+/* HOME */
+V.home=()=>{const d=dev(),o=S.outfit||mk();return `<div class="row sp"><div><p>${greet()},</p><h1>${S.user.name}</h1></div><span class="tag w">Demo Mode</span></div>
+<div class="card" style="margin-top:16px" onclick="${d?"tab('devices')":"go('pair')"}">${d?`<div class="row"><div class="ic">🪞</div><div style="flex:1"><h3>${d.name}</h3><p>${d.on?'Online · Wi-Fi '+d.wifi:'Offline'}</p></div>${badge(false)}</div>`:`<div class="row"><div class="ic">＋</div><div style="flex:1"><h3>Connect your MIRROR</h3><p>No device yet. Tap to add one.</p></div></div>`}</div>
+<div class="g g2"><div class="card" onclick="go('weather')"><p>${S.city}</p><h1>${S.temp}°C</h1><p>☀️ Clear · demo data</p></div>
+<div class="card" onclick="go('calendar')"><h3>Today’s Schedule</h3>${S.events.slice(0,3).map(e=>`<p>${e.t} ${e.n}</p>`).join('')||'<p>Nothing planned</p>'}</div></div>
+<div class="card" onclick="tab('assistant')"><p>Outfit for today</p><div class="row" style="margin-top:8px">${o.map(x=>`<div class="ic" style="background:${x.color}33">${EM[x.cat]}</div>`).join('')}</div></div>
+<h2>Quick access</h2><div class="g g2">${[['🪞','My Mirror',"tab('devices')"],['👕','My Wardrobe',"tab('wardrobe')"],['✦','Outfit Assistant',"tab('assistant')"],['📅','Calendar',"go('calendar')"],['🎵','Music',"go('music')"],['☁️','Weather',"go('weather')"],['🏠','Smart Home',"go('smart')"],['⚙️','Settings',"tab('profile')"]].map(a=>`<button class="q" onclick="${a[2]}"><b>${a[0]}</b><h3>${a[1]}</h3></button>`).join('')}</div>`};
+/* PAIRING */
+let P={step:0,model:null,net:null,prog:0};
+function startPair(){P={step:0,model:null,net:null,prog:0};go('pair');setTimeout(()=>{P.step=1;if(top_()==='pair')render()},2200)}
+const top_=()=>S.stack[S.stack.length-1];
+V.pair=()=>{const s=P.step;let b='';
+ if(s===0)b=`<div class="radar"><i></i><i></i>🪞</div><p style="text-align:center">Searching for MIRROR devices over Bluetooth…</p><div class="row sp" style="margin-top:14px"><span class="mu">Bluetooth</span><span class="tag ok">On (simulated)</span></div><button class="btn s" style="margin-top:16px" onclick="P.step=4;render()">Use QR Code instead</button>`;
+ if(s===1)b=`<p>Found 3 mirrors nearby (simulated). Pick yours:</p><div style="height:12px"></div>${Object.keys(MODELS).map(k=>`<div class="card row" onclick="P.model='${k}';P.step=2;render()"><div class="ic">🪞</div><div style="flex:1"><h3>MIRROR ${k}</h3><p>${MODELS[k].d}</p></div><span class="tag">Pair</span></div>`).join('')}`;
+ if(s===2)b=`<p>Choose your home Wi-Fi.</p><div style="height:10px"></div>${['Home-WiFi','Casa_5G','Guest'].map(w=>`<div class="card row" style="${P.net===w?'border-color:var(--ac)':''}" onclick="P.net='${w}';render()"><span style="flex:1">📶 ${w}</span>${P.net===w?'✓':''}</div>`).join('')}${P.net?'<input id="wp" type="password" placeholder="Wi-Fi password"><button class="btn" onclick="wifiGo()">Connect</button>':''}`;
+ if(s===3)b=`<div class="radar"><i></i>⚙️</div><div class="bar"><i style="width:${P.prog}%"></i></div><p style="text-align:center">${P.prog<40?'Pairing…':P.prog<80?'Sending Wi-Fi credentials…':'Finishing setup…'} ${P.prog}%</p><div class="row sp"><span class="mu">Bluetooth</span><span class="tag ok">Paired</span></div><div class="row sp" style="margin-top:6px"><span class="mu">Wi-Fi</span><span class="tag w">Connecting</span></div>`;
+ if(s===4)b=`<div class="card" style="text-align:center"><svg width="170" height="170" viewBox="0 0 21 21" style="background:#fff;padding:8px;border-radius:12px">${Array.from({length:441},(_, i)=>{const x=i%21,y=(i/21)|0;const f=(x<7&&y<7)||(x>13&&y<7)||(x<7&&y>13);return((x*7+y*13+x*y)%3===0||f&&(x%6==0||y%6==0||x%6==2&&y%6>=2&&y%6<=4&&x<7))?`<rect x="${x}" y="${y}" width="1" height="1" fill="#000"/>`:''}).join('')}</svg><p style="margin-top:10px">Point your camera at the code on the mirror screen (simulated).</p></div><button class="btn" onclick="P.model=P.model||'NOVA';P.step=2;render()">Simulate scan</button>`;
+ if(s===5)b=`<div style="text-align:center;padding:30px 0"><div style="font-size:64px">✓</div><h1>MIRROR OS successfully connected.</h1><p style="margin:8px 0 20px">MIRROR ${P.model} · ${P.net}<br>Simulated connection: no real device was paired.</p></div><button class="btn" onclick="S.stack=[];tab('home')">Go to Home</button>`;
+ return `<h1>Connect your MIRROR</h1><p style="margin-bottom:14px">${s<5?'Turn on your mirror, then follow the steps.':''}</p>${b}`};
+function wifiGo(){if(($('#wp').value||'').length<8)return toast('Wi-Fi password must have at least 8 characters');P.step=3;P.prog=0;render();const t=setInterval(()=>{P.prog+=10;if(top_()!=='pair'){clearInterval(t);return}if(P.prog>=100){clearInterval(t);S.devices.push({name:'MIRROR '+P.model,model:P.model,wifi:P.net,on:true});S.cur=S.devices.length-1;P.step=5}render()},400)}
+/* WARDROBE */
+V.wardrobe=()=>{const L=S.cat==='All'?S.wardrobe:S.wardrobe.filter(c=>c.cat===S.cat);return `<h1>My Wardrobe</h1><p style="margin:4px 0 14px">${S.wardrobe.length} items</p><button class="btn" onclick="addSheet()">+ Add new clothing</button>
+<div class="chips" style="margin-top:14px">${['All',...CAT].map(c=>`<button class="chip ${S.cat===c?'on':''}" onclick="S.cat='${c}';render()">${c}</button>`).join('')}</div>
+${L.length?`<div class="g g2">${L.map(c=>`<button class="cl" style="background:${c.color}33" onclick="itemSheet(${c.id})">${c.img?`<img src="${c.img}" alt="${c.name}">`:EM[c.cat]}<small>${c.name}</small></button>`).join('')}</div>`:`<div class="card" style="text-align:center"><div style="font-size:40px">🧺</div><h3>Nothing here yet</h3><p>Add a ${S.cat.toLowerCase()} item by photo or QR code.</p></div>`}`};
+function addSheet(){sheet(`<h2 style="margin-top:0">Add new clothing</h2><div class="g"><button class="card row" onclick="qrScan()"><div class="ic">▦</div><div style="text-align:left"><h3>Scan QR Code</h3><p>Read a garment tag</p></div></button><button class="card row" onclick="photoSheet()"><div class="ic">📷</div><div style="text-align:left"><h3>Add by Photo</h3><p>Camera or gallery, auto-classify</p></div></button></div>`)}
+function qrScan(){sheet(`<div class="radar"><i></i>▦</div><p style="text-align:center">Camera scan is simulated in this prototype. A real build would read the tag with the phone camera.</p><div class="bar"><i style="width:0" id="qb"></i></div>`);let w=0;const t=setInterval(()=>{w+=25;const b=$('#qb');if(b)b.style.width=w+'%';if(w>=100){clearInterval(t);formSheet({name:'Linen shirt (tag AB-2041)',cat:'Shirts',color:'#a9c1e8',season:'Summer',occ:'Casual'},null,'Tag read (demo). Check the details.')}},350)}
+function photoSheet(){sheet(`<h2 style="margin-top:0">Add by Photo</h2><input id="fi" type="file" accept="image/*" capture="environment" style="padding:12px"><p>Choose a photo or take one. Classification is a demo guess: always check it.</p>`);$('#fi').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{sheet(`<div class="radar"><i></i>✦</div><p style="text-align:center">Analysing image…</p>`);const g=guess(f.name);setTimeout(()=>formSheet(g,r.result,'Demo classification, not real AI. Edit anything that is wrong.'),1400)};r.readAsDataURL(f)}}
+function guess(n){n=n.toLowerCase();const m=[['jean','Jeans'],['shirt','Shirts'],['coat','Coats'],['jacket','Jackets'],['shoe','Shoes'],['sneak','Shoes'],['hood','Hoodies']].find(a=>n.includes(a[0]));const c=m?m[1]:CAT[Math.floor(Math.random()*8)];return{name:'New '+c.toLowerCase(),cat:c,color:['#1F2F5C','#8D94A6','#C9B79C','#1b1b1b'][Math.floor(Math.random()*4)],season:'All',occ:'Casual'}}
+let DR=null;
+function formSheet(g,img,note){DR={...g,img};sheet(`<h2 style="margin-top:0">Confirm details</h2>${img?`<img src="${img}" style="width:100%;height:160px;object-fit:cover;border-radius:16px;margin-bottom:10px" alt="">`:''}<p style="margin-bottom:10px">${note}</p>
+<input id="fn" value="${g.name}"><select id="fc">${CAT.map(c=>`<option ${c===g.cat?'selected':''}>${c}</option>`).join('')}</select>
+<div class="row"><input id="fk" type="color" value="${g.color}" style="width:60px;padding:4px"><select id="fs" style="flex:1">${['All','Spring','Summer','Autumn','Winter'].map(c=>`<option ${c===g.season?'selected':''}>${c}</option>`).join('')}</select></div>
+<select id="fo">${['Casual','Work','Formal','Sport'].map(c=>`<option ${c===g.occ?'selected':''}>${c}</option>`).join('')}</select><button class="btn" onclick="saveItem()">Save to wardrobe</button>`)}
+function saveItem(){const n=$('#fn').value.trim();if(!n)return toast('Give the item a name');S.wardrobe.push({id:Date.now(),name:n,cat:$('#fc').value,color:$('#fk').value,season:$('#fs').value,occ:$('#fo').value,date:today(),img:DR.img});close();S.cat='All';render();toast('Added: '+n)}
+function itemSheet(id){const c=S.wardrobe.find(x=>x.id===id);sheet(`<h2 style="margin-top:0">${c.name}</h2><div class="card"><p>Category: ${c.cat}</p><p>Season: ${c.season} · Occasion: ${c.occ}</p><p>Added: ${c.date}</p><p>Colour: <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:${c.color};vertical-align:middle"></span> ${c.color}</p></div><button class="btn d" onclick="S.wardrobe=S.wardrobe.filter(x=>x.id!==${id});close();render();toast('Item removed')">Remove item</button>`)}
+/* ASSISTANT */
+function mk(){const w=S.wardrobe,t=S.temp,pick=c=>{const l=w.filter(x=>c.includes(x.cat));return l[Math.floor(Math.random()*l.length)]};
+ const o=[t<18?pick(['Sweaters','Shirts']):pick(['T-shirt','Shirts']),pick(['Jeans','Pants']),pick(['Shoes']),t<10?pick(['Coats']):t<18?pick(['Jackets']):null,pick(['Accessories'])].filter(Boolean);S.outfit=o;return o}
+V.assistant=()=>{const o=S.outfit||mk();return `<h1>Outfit Assistant</h1><p style="margin:6px 0 14px">It’s ${S.temp}°C today. Your perfect outfit is ready.</p>
+<div class="card"><div class="g g3">${o.map(c=>`<div class="cl" style="background:${c.color}33">${c.img?`<img src="${c.img}" alt="">`:EM[c.cat]}<small>${c.name}</small></div>`).join('')}</div>
+<p style="margin-top:12px">Built from ${o.length} items in your wardrobe using temperature, season and colours.</p></div>
+<div class="g g2"><button class="btn" onclick="mk();render()">Generate Outfit</button><button class="btn s" onclick="mk();render();toast('Another suggestion')">Another Suggestion</button><button class="btn s" onclick="S.saved.unshift(o2());toast('Outfit saved');render()">Save Outfit</button><button class="btn s" onclick="S.worn.unshift({d:today(),o:o2()});toast('Logged for today');render()">Wear Today</button></div>
+<h2>Saved outfits</h2>${S.saved.length?S.saved.map(x=>`<div class="card"><p>${x.map(c=>c.name).join(' · ')}</p></div>`).join(''):'<p>No saved outfits yet.</p>'}
+<h2>History</h2>${S.worn.length?S.worn.map(x=>`<div class="card"><h3>${x.d}</h3><p>${x.o.map(c=>c.name).join(' · ')}</p></div>`).join(''):'<p>Outfits you wear will show up here.</p>'}`};
+const o2=()=>[...S.outfit];
+/* DEVICES */
+V.devices=()=>{const d=dev();if(!S.devices.length)return `<h1>Devices</h1><div class="card" style="text-align:center;margin-top:16px"><div style="font-size:44px">🪞</div><h3>No mirror connected</h3><p style="margin:6px 0 14px">Add your MIRROR to sync calendar, weather and outfits.</p><button class="btn" onclick="startPair()">Add new device</button></div>`;
+ const M=MODELS[d.model];const D=S.disp;return `<div class="row sp"><h1>Devices</h1><button class="btn sm" onclick="startPair()">+ Add</button></div>
+<div class="chips" style="margin-top:10px">${S.devices.map((x,i)=>`<button class="chip ${i===S.cur?'on':''}" onclick="S.cur=${i};render()">${x.name}</button>`).join('')}</div>
+<div class="mirror" style="--glow:${M.glow}"><div class="row sp"><div><div class="t">08:45</div><p>Mon, Apr 28</p></div>${D.Weather?'<div style="text-align:right"><h3>☀️ '+S.temp+'°C</h3><p>Sunny</p></div>':''}</div>
+${D.Calendar?`<div style="margin-top:12px"><p style="color:#fff">Today</p>${S.events.slice(0,2).map(e=>`<p>${e.t} ${e.n}</p>`).join('')}</div>`:''}
+${D['Suggested outfit']?`<div class="row" style="margin-top:10px">${(S.outfit||mk()).slice(0,3).map(c=>`<span class="ic" style="width:32px;height:32px;font-size:16px">${EM[c.cat]}</span>`).join('')}</div>`:''}
+${D.Spotify?'<p style="margin-top:8px;color:#fff">♫ Demo track</p>':''}</div>
+<p style="margin:6px 4px">Preview of what the mirror shows. This is a simulation.</p>
+<div class="card"><div class="row sp"><div><h3>${d.name}</h3><p>${d.on?'Online':'Offline'} · Wi-Fi ${d.wifi} · Bluetooth paired</p></div>${badge(false)}</div>
+<div class="g g2" style="margin-top:12px"><button class="btn s" onclick="ren()">Rename</button><button class="btn s" onclick="toast('Reconfiguring Wi-Fi…');S.devices.splice(S.cur,1);S.cur=0;startPair()">Reconfigure</button></div><button class="btn d" style="margin-top:10px" onclick="S.devices.splice(S.cur,1);S.cur=0;render();toast('Device disconnected')">Disconnect</button></div>
+<h2>Mirror Display Settings</h2><div class="card">${Object.keys(D).map(k=>`<div class="row sp" style="padding:9px 0"><span>Show ${k.toLowerCase()}</span>${sw(D[k],`S.disp['${k}']=!S.disp['${k}'];render();toast('Synced to mirror (demo)')`)}</div>`).join('')}</div>`};
+function ren(){sheet(`<h2 style="margin-top:0">Rename device</h2><input id="rn" value="${dev().name}"><button class="btn" onclick="const v=$('#rn').value.trim();if(v){dev().name=v;close();render();toast('Renamed')}">Save name</button>`)}
+/* PROFILE */
+V.profile=()=>{const u=S.user;return `<div class="row"><div class="ic" style="width:60px;height:60px;border-radius:50%;font-size:26px">${u.name[0].toUpperCase()}</div><div><h1 style="font-size:22px">${u.name}</h1><p>${u.email}</p></div></div>
+<h2>Linked services</h2><div class="card">${[['Google Calendar','Not connected','Not configured in this prototype'],['Apple Calendar','Not connected','Needs the native iOS app'],['Spotify','Not connected','Needs Spotify API keys']].map(a=>`<div class="row sp" style="padding:8px 0"><div><h3>${a[0]}</h3><p>${a[2]}</p></div><span class="tag w">${a[1]}</span></div>`).join('')}</div>
+<h2>Preferences</h2><div class="card"><p>City</p><input value="${S.city}" onchange="S.city=this.value;toast('City updated')"><p>Language</p><select onchange="toast('Language saved')"><option>English</option><option>Italiano</option></select>
+<div class="row sp" style="padding:8px 0"><span>Notifications</span>${sw(S.n!==false,"S.n=S.n===false;render()")}</div><div class="row sp" style="padding:8px 0"><span>Share location for weather</span>${sw(S.loc,"S.loc=!S.loc;render();toast(S.loc?'Demo: location not actually read':'Location off')")}</div></div>
+<div class="card"><h3>Privacy and security</h3><p>All data stays in this browser tab. Nothing is sent to a server.</p></div>
+<button class="btn d" onclick="S.user=null;S.devices=[];S.stack=[];render()">Log out</button>`};
+/* SUBSCREENS */
+V.weather=()=>`<h1>Weather</h1><p>${S.city} · demo data, not a live forecast</p><div class="card" style="text-align:center;margin-top:12px"><div style="font-size:60px">☀️</div><h1 style="font-size:48px">${S.temp}°C</h1><p>Min 8° · Max 14° · Clear</p></div>
+<div class="g g2">${FC.map(f=>`<div class="card"><p>${f[0]}</p><h3>${f[2]} ${f[1]}°</h3><p>${f[3]}° / ${f[4]}°</p></div>`).join('')}</div><input placeholder="Change city" onchange="S.city=this.value;S.temp=Math.round(8+Math.random()*16);render();toast('City set to '+S.city)">`;
+V.calendar=()=>{const ev=S.cal==='Day'?S.events:S.cal==='Week'?[...S.events,{id:91,t:'Tue 10:00',n:'Dentist'},{id:92,t:'Fri 19:00',n:'Dinner'}]:S.events;return `<div class="row sp"><h1>Calendar</h1><span class="tag w">Sample data</span></div>
+<div class="chips" style="margin-top:10px">${['Day','Week','Month'].map(c=>`<button class="chip ${S.cal===c?'on':''}" onclick="S.cal='${c}';render()">${c}</button>`).join('')}</div>
+${S.cal==='Month'?`<div class="card"><div class="g" style="grid-template-columns:repeat(7,1fr);text-align:center">${Array.from({length:30},(_,i)=>`<span style="padding:6px;border-radius:10px;${i===27?'background:var(--ac)':''}${[4,9,15].includes(i)?';border-bottom:2px solid var(--ac)':''}">${i+1}</span>`).join('')}</div></div>`:''}
+${ev.map(e=>`<div class="card row sp"><div><h3>${e.n}</h3><p>${e.t} · reminder 15 min before</p></div><button class="btn sm d" onclick="S.events=S.events.filter(x=>x.id!==${e.id});render();toast('Event deleted')">Delete</button></div>`).join('')||'<div class="card"><p>No events. Add one below.</p></div>'}
+<h2>New event</h2><div class="row"><input id="et" type="time" value="09:00" style="width:110px"><input id="en" placeholder="Title"></div><button class="btn" onclick="const n=$('#en').value.trim();if(!n)return toast('Add a title');S.events.push({id:Date.now(),t:$('#et').value,n});S.events.sort((a,b)=>a.t>b.t?1:-1);render();toast('Event added')">Add event</button>`};
+V.music=()=>{const t=TR[S.track];return `<h1>Music</h1><div class="card"><div class="row sp"><div><h3>Connect Spotify</h3><p>Not available: needs Spotify authorisation and API keys.</p></div><button class="btn sm s" onclick="toast('Spotify is not connected. The player below is a demo.')">Connect</button></div></div>
+<div class="card" style="text-align:center"><div style="width:140px;height:140px;margin:6px auto 14px;border-radius:24px;background:linear-gradient(135deg,var(--ac),#8a2be2);display:grid;place-items:center;font-size:50px">♫</div><h3>${t[0]}</h3><p>${t[1]} · demo player</p>
+<div class="row" style="justify-content:center;gap:22px;margin-top:14px;font-size:26px"><button onclick="S.track=(S.track+2)%3;render()" style="background:none" aria-label="previous">⏮</button><button onclick="S.playing=!S.playing;render()" style="background:var(--ac);width:58px;height:58px;border-radius:50%" aria-label="play">${S.playing?'⏸':'▶'}</button><button onclick="S.track=(S.track+1)%3;render()" style="background:none" aria-label="next">⏭</button></div></div>
+<h2>Playlists (sample)</h2>${['Morning focus','Chill evening','Workout'].map(p=>`<div class="card row"><div class="ic">♪</div><h3>${p}</h3></div>`).join('')}`};
+V.smart=()=>`<div class="row sp"><h1>Smart Home</h1><span class="tag w">Simulated</span></div><p style="margin:6px 0 14px">Matter-ready layout. These devices are samples, nothing real is controlled.</p>${S.home.map((h,i)=>`<div class="card row sp"><div class="row"><div class="ic">${['💡','🌡️','🔌'][i]}</div><h3>${h[0]}</h3></div>${sw(h[1],`S.home[${i}][1]=!S.home[${i}][1];render()`)}</div>`).join('')}<button class="btn s" onclick="toast('Device discovery is not available in the prototype')">+ Add device</button>`;
+render();
+</script></body></html>
